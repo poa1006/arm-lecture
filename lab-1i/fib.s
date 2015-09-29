@@ -11,33 +11,30 @@
 fibonacci:
 	@ ADD/MODIFY CODE BELOW
 	@ PROLOG
-	push {r3, r4, r5, lr}
+	push {r4, r5,r6,r7,lr}
+	
+	mov r4 ,#0	@ R4 = 0
+	mov r5 ,#1	@ R5 = 1
+	
 
-	@ R4 = R0 - 0 (update flags)
-	@ if(R0 <= 0) goto .L3 (which returns 0)
+	subs r6, r0 ,#1	@ get value -1 to r6
+	bgt  .Loop	@ If R6 > 1 goto .Loop or return r0
 
-	@ Compare R4 wtih 1
-	@ If R4 == 1 goto .L4 (which returns 1)
-
-	@ R0 = R4 - 1
-	@ Recursive call to fibonacci with R4 - 1 as parameter
-
-	@ R5 = R0
-	@ R0 = R4 - 2
-	@ Recursive call to fibonacci with R4 - 2 as parameter
-
-	@ R0 = R5 + R0 (update flags)
-
-	pop {r3, r4, r5, pc}		@EPILOG
+	pop {r4, r5, r6,r7,pc}		@EPILOG
 
 	@ END CODE MODIFICATION
-.L3:
-	mov r0, #0			@ R0 = 0
-	pop {r3, r4, r5, pc}		@ EPILOG
+.Loop:
+	add r7, r4, r5	@sum = R4 + R5
+	mov r4, r5	@R4 = R5
+	mov r5, r7	@R5 = sum
+	
+	subs r6 , r6 , #1	@R6 = R6 -1
+	bgt  .Loop		@if R6 > 1 goto .Loop or return
+	
+	mov r0, r7 		@R0 = sum
 
-.L4:
-	mov r0, #1			@ R0 = 1
-	pop {r3, r4, r5, pc}		@ EPILOG
+	pop {r4, r5,r6,r7, pc}	@ EPILOG
+
 
 	.size fibonacci, .-fibonacci
 	.end
