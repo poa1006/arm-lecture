@@ -31,4 +31,4 @@ qemu: fibseq
 	@yes 6 | $(call QEMU_CMD)
 	@sleep 1
 	@yes 7 | $(call QEMU_CMD)
-	@sleep 1
+	@sh unit.sh
